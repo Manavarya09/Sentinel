@@ -105,11 +105,43 @@ SentinelHybrid/
 - **Plugin Analytics:** Add new analytics services behind stable ObjC interfaces; preserve binary compatibility.
 - **Maintainability:** Clear boundaries; ObjC core has minimal churn; Swift UI iterates quickly without destabilizing persistence or analytics.
 
-## Running & Integration
-- Integrate `SentinelHybrid` into an Xcode workspace.
-- Add ObjCCore group to a framework target, SwiftUI to an app target.
-- Ensure bridging headers/module maps expose ObjC symbols to Swift.
-- Use app/scene delegates to post custom lifecycle notifications to `NSNotificationCenter`.
+## Xcode Setup
+To integrate into Xcode for iOS/macOS development:
+
+1. **Create Xcode Project:**
+   - Open Xcode, select "File > New > Project".
+   - Choose "App" for iOS (or macOS), name it "SentinelHybrid", select SwiftUI interface, SwiftUI App lifecycle.
+   - Save the project in `/Users/manavaryasingh/Sentinel/SentinelHybrid`.
+
+2. **Add ObjCCore Framework Target:**
+   - In Xcode, select "File > New > Target".
+   - Choose "Framework" (iOS or macOS), name it "ObjCCore".
+   - Add all files from `ObjCCore/` to the framework target.
+   - Ensure "Defines Module" is enabled in build settings for modular imports.
+
+3. **Configure Bridging Header for App Target:**
+   - In the SentinelHybrid app target, go to Build Settings.
+   - Search for "Objective-C Bridging Header".
+   - Set it to `SentinelHybrid/SentinelHybrid-Bridging-Header.h` (the file created above).
+   - This allows Swift code to import ObjCCore seamlessly.
+
+4. **Link Frameworks:**
+   - In the app target, go to "General" tab.
+   - Under "Frameworks, Libraries, and Embedded Content", add "ObjCCore.framework" and embed it.
+
+5. **Add SwiftUI and App Files:**
+   - Add `SwiftUI/Views/`, `SwiftUI/ViewModels/`, `SwiftUI/UIModels/`, `App/SentinelHybridApp.swift` to the app target.
+   - Replace the default `ContentView.swift` with `ActivitySummaryView.swift` and update the app struct accordingly.
+
+6. **Add Test Targets:**
+   - Create unit test targets for ObjC (link to ObjCCore) and Swift (link to app).
+   - Add test files from `Tests/ObjC/` and `Tests/Swift/`.
+
+7. **Build and Run:**
+   - Ensure Core Data model is compiled; add any necessary entitlements for Keychain access.
+   - Run on simulator/device; the app will start event capture and display analytics summaries.
+
+This setup maintains clean separation: ObjCCore as a modular framework, Swift UI consuming it via bridging header.
 
 ## Privacy & Offline-Only Guarantees
 - No network clients; all data local.
