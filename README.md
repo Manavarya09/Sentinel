@@ -115,3 +115,4 @@ SentinelHybrid/
 - No network clients; all data local.
 - Keychain and file protection enforced; explicit accessibility attributes.
 # Sentinel
+# Sentinel
